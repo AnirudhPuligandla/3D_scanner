@@ -36,20 +36,15 @@ private:
     Ui::MainWindow *ui;
 
     // Objects to various classes
-    CloudRegister cloudReg;
     CentralWidget widget;
     ScreenSetup getSize;
     QSize size;
 
     //-------------Data variables------------>
-    std::string path;
     //dimensions for screen size
     int x_,y_;
     //central widget
     QWidget *centralWidget_;
-
-    //pointer to read point cloud
-    pcl::PointCloud<PointT>::Ptr cloud;
 
 };
 

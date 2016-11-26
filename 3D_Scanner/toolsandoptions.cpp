@@ -15,5 +15,7 @@ QPushButton* ToolsAndOptions::getStartButton()
 
 void ToolsAndOptions::on_startButton_pressed()
 {
-
+    path = "../bunny1.pcd";
+    cloud = cloudReg.getCloud(path);
+    disp.displayCloud(cloud);
 }

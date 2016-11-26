@@ -35,6 +35,7 @@ private:
 public:
 
     //Consrtuctor
+    //CentralWidget();
     CentralWidget(QWidget *parent = 0);
 
     // Rendering Window

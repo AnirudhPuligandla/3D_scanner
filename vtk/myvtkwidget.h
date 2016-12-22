@@ -44,13 +44,13 @@ private:
 
     //-------------Data variables------------>
     vector<QString> pcdNames;
-    int count;
+    //uint count;
 
     //vector containing all the point clouds
     vector<pcl::PointCloud<PointT>::Ptr> cloudVector;
 
     //point cloud
-    pcl::PointCloud<PointT>::Ptr cloud;
+    //pcl::PointCloud<PointT>::Ptr cloud;
 
     //PCL Viewer
     pcl::visualization::PCLVisualizer *m_visualizer;

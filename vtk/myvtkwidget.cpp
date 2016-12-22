@@ -30,14 +30,16 @@ MyVTKWidget::MyVTKWidget(QWidget *parent) : QWidget(parent)
     QObject::connect(scanButton, SIGNAL(pressed()), this, SLOT(on_scanButton_pressed()));
 
     //initialize point cloud
-    cloud.reset(new pcl::PointCloud<PointT>);
+    //cloud.reset(new pcl::PointCloud<PointT>);
 
+    /*qDebug() << "Calling get count";
     count = fileGrab.getCount();
+
     for(int i=0; i < count; i++)
     {
 
         cloudVector.push_back(cloud);
-    }
+    }*/
 
     //initialize PCL Viewer
     m_visualizer = new pcl::visualization::PCLVisualizer ("3D Viewer",false);
@@ -104,6 +106,11 @@ void MyVTKWidget::on_readButton_pressed()
 
     cloudVector = fileGrab.getPointClouds();
 
+    //Display the first point cloud in the list
+    m_visualizer->addPointCloud(cloudVector[0], "ccc");
+    m_visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "ccc");
+    m_visualizer->addCoordinateSystem();
+    displayWidget_->update();
     /*
     pcl::io::loadPCDFile(path, *cloud);
     qDebug() << cloud->points.size();
@@ -115,19 +122,21 @@ void MyVTKWidget::on_readButton_pressed()
 
 void MyVTKWidget::on_cloudListItem_clicked(QListWidgetItem *item)
 {
-    qDebug() << "Putain";
+    //qDebug() << "Putain";
+    //qDebug() << count;
 
-    for(int i = 0; i < count; i++)
+    for(int i = 1; i <= cloudVector.size(); i++)
     {
-        qDebug() << "Arjit Singh";
+        //qDebug() << "Jagjit Singh";
 
         if(cloudList->item(i) == item)
         {
-            qDebug() << "more putain";
-            m_visualizer->addPointCloud(cloudVector[i]/*, ("a" + to_string(i))*/);
-            m_visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2/*, ("a" + to_string(i))*/);
-            m_visualizer->addCoordinateSystem();
+            //qDebug() << "more putain";
+            m_visualizer->removePointCloud("ccc");
+            m_visualizer->addPointCloud(cloudVector[i-1], "ccc");
+            //m_visualizer->spinOnce();
             displayWidget_->update();
+            qDebug() << "point cloud updated" << i;
         }
     }
 }

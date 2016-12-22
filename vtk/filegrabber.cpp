@@ -6,26 +6,27 @@ void FileGrabber::initializeFileList()
     path = "C:\\Users\\pvani_000\\Downloads\\data";
 
     //Count the number of files in the directory
-    QDir dir(path);
+    /*QDir dir(path);
     dir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
-    count = dir.count();
+    cloudCounter = dir.count();
+    qDebug() << "counter from file grabber" << cloudCounter;*/
 
     //initialize point cloud
     cloud.reset(new pcl::PointCloud<PointT>);
 
-    //Initialize the point cloud Vector
-    for(int i=0; i < count; i++)
+    /*/Initialize the point cloud Vector
+    for(int i=0; i < cloudCounter; i++)
     {
 
         cloudVector.push_back(cloud);
-    }
+    }*/
 
     //qDebug() << "Fuck You";
 
     //Iterate over the directory getting files with .pcd extension
     QDirIterator it(path, QStringList() << "*.pcd", QDir::Files);
 
-    int i = 0;
+    //int i = 0;
 
     while (it.hasNext())
     {
@@ -36,8 +37,14 @@ void FileGrabber::initializeFileList()
         pcdNames.push_back(it.fileName());
 
         //read the point clouds and add to the vector
-        pcl::io::loadPCDFile(it.filePath().toStdString(), *cloudVector[i]);
-        i++;
+        pcl::io::loadPCDFile(it.filePath().toStdString(), *cloud);
+
+        //add the point cloud to the cloud vector
+        cloudVector.push_back(cloud);
+
+        //Reset the point cloud for next iteration
+        //cloud.reset();
+        //i++;
 
         qDebug() << it.filePath();
     }
@@ -53,10 +60,12 @@ vector<QString> FileGrabber::getNames()
     return pcdNames;
 }
 
-int FileGrabber::getCount()
+/*int FileGrabber::getCount()
 {
-    return count;
-}
+    qDebug() << "in cloudGrabber";
+    qDebug() << cloudCounter;
+    return cloudCounter;
+}*/
 
 vector<pcl::PointCloud<PointT>::Ptr> FileGrabber::getPointClouds()
 {

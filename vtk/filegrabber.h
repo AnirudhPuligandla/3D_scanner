@@ -30,7 +30,7 @@ public:
     vector<QString> getNames();
 
     //Function to return the no. of files in directory
-    int getCount();
+    //int getCount();
 
     //Function to return vector containing point clouds
     vector<pcl::PointCloud<PointT>::Ptr> getPointClouds();
@@ -52,7 +52,7 @@ private:
     pcl::PointCloud<PointT>::Ptr cloud;
 
     //variable to hold the count of files in the directory
-    int count;
+    //uint cloudCounter;
 };
 
 using namespace std;

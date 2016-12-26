@@ -3,7 +3,9 @@
 void FileGrabber::initializeFileList()
 {
     //Initialize the path
-    path = "C:\\Users\\pvani_000\\Downloads\\data";
+    path = "D:\\QT\\vtk\\data";
+
+    qDebug() << "Path found";
 
     //Count the number of files in the directory
     /*QDir dir(path);
@@ -26,8 +28,6 @@ void FileGrabber::initializeFileList()
     //Iterate over the directory getting files with .pcd extension
     QDirIterator it(path, QStringList() << "*.pcd", QDir::Files);
 
-    //int i = 0;
-
     while (it.hasNext())
     {
         //Save the paths to the files
@@ -43,10 +43,11 @@ void FileGrabber::initializeFileList()
         cloudVector.push_back(cloud);
 
         //Reset the point cloud for next iteration
-        //cloud.reset();
+        cloud.reset(new pcl::PointCloud<PointT>);
         //i++;
 
         qDebug() << it.filePath();
+        //qDebug() << cloudVector(i);
     }
 }
 

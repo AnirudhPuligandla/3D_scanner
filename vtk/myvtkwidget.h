@@ -24,11 +24,12 @@
 #include <vector>
 #include <QString>
 #include <QDebug>
+#include "kinect2_grabber.h"
 
 using namespace std;
 
-//typedef pcl::PointXYZ PointT;
- typedef pcl::PointXYZ PointT;
+//typedef pcl::PointXYZRGBA PointT;
+ typedef pcl::PointXYZRGBA PointT;
 
 class MyVTKWidget : public QWidget
 {
@@ -50,10 +51,10 @@ private:
     vector<pcl::PointCloud<PointT>::Ptr> cloudVector;
 
     //point cloud
-    //pcl::PointCloud<PointT>::Ptr cloud;
+    pcl::PointCloud<PointT>::ConstPtr cloud;
 
     //PCL Viewer
-    pcl::visualization::PCLVisualizer *m_visualizer;
+    boost::shared_ptr<pcl::visualization::PCLVisualizer> m_visualizer;
 
     //widgets and layouts
     QVTKWidget *displayWidget_;

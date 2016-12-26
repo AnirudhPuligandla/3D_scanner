@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include "MyVTKWidget.h"
+#include "myvtkwidget.h"
 
 namespace Ui {
 class MainWindow;

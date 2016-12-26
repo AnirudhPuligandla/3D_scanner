@@ -14,8 +14,8 @@
 
 using namespace std;
 
-//typedef pcl::PointXYZ PointT;
- typedef pcl::PointXYZ PointT;
+//typedef pcl::PointXYZRGBA PointT;
+ typedef pcl::PointXYZRGBA PointT;
 
 class FileGrabber
 {

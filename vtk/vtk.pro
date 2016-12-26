@@ -15,27 +15,28 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     myvtkwidget.cpp \
-    filegrabber.cpp
+    filegrabber.cpp \
+    kinect2_grabber.cpp
 
 # PCL
-INCLUDEPATH += "C:\PCL1.8.0\include\pcl-1.8"
-INCLUDEPATH += "C:\PCL1.8.0\3rdParty\VTK\include\vtk-7.0"
-INCLUDEPATH += "C:\PCL1.8.0\3rdParty\Boost\include\boost-1_61"
-INCLUDEPATH += "C:\PCL1.8.0\3rdParty\Qhull\include"
-INCLUDEPATH += "C:\PCL1.8.0\3rdParty\FLANN\include"
-INCLUDEPATH += "C:\PCL1.8.0\3rdParty\Eigen\eigen3"
+INCLUDEPATH += "C:\Program Files\PCL 1.8.0\include\pcl-1.8"
+INCLUDEPATH += "C:\Program Files\PCL 1.8.0\3rdParty\VTK\include\vtk-7.0"
+INCLUDEPATH += "C:\Program Files\PCL 1.8.0\3rdParty\Boost\include\boost-1_61"
+INCLUDEPATH += "C:\Program Files\PCL 1.8.0\3rdParty\Qhull\include"
+INCLUDEPATH += "C:\Program Files\PCL 1.8.0\3rdParty\FLANN\include"
+INCLUDEPATH += "C:\Program Files\PCL 1.8.0\3rdParty\Eigen\eigen3"
 INCLUDEPATH += "C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc"
-INCLUDEPATH += "C:\Programs\OpenNI2\Include"
+INCLUDEPATH += "C:\Program Files\OpenNI2\Include"
 
 LIBS += opengl32.lib advapi32.lib Ws2_32.lib user32.lib shell32.lib gdi32.lib kernel32.lib
 
-LIBS += "-LC:\PCL1.8.0\lib"
-LIBS += "-LC:\PCL1.8.0\3rdParty\VTK\lib"
-LIBS += "-LC:\PCL1.8.0\3rdParty\Qhull\lib"
-LIBS += "-LC:\PCL1.8.0\3rdParty\FLANN\lib"
-LIBS += "-LC:\PCL1.8.0\3rdParty\Boost\lib"
+LIBS += "-LC:\Program Files\PCL 1.8.0\lib"
+LIBS += "-LC:\Program Files\PCL 1.8.0\3rdParty\VTK\lib"
+LIBS += "-LC:\Program Files\PCL 1.8.0\3rdParty\Qhull\lib"
+LIBS += "-LC:\Program Files\PCL 1.8.0\3rdParty\FLANN\lib"
+LIBS += "-LC:\Program Files\PCL 1.8.0\3rdParty\Boost\lib"
 LIBS += "-LC:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\Lib\x64"
-LIBS += "-LC:\Programs\OpenNI2\Lib"
+LIBS += "-LC:\Program Files\OpenNI2\Lib"
 
 
 LIBS += -lpcl_common_release
@@ -145,7 +146,7 @@ LIBS += -lvtkImagingSources-7.0
 LIBS += -lvtkImagingStatistics-7.0
 LIBS += -lvtkImagingStencil-7.0
 LIBS += -lvtkInfovisCore-7.0
-LIBS += -lvtkInfovisLayout-7.0
+LIBS += --7.0
 LIBS += -lvtkInteractionImage-7.0
 LIBS += -lvtkInteractionStyle-7.0
 LIBS += -lvtkInteractionWidgets-7.0
@@ -211,6 +212,7 @@ LIBS += -lkinect20
 HEADERS  += mainwindow.h \
     myvtkwidget.h \
     screensetup.h \
-    filegrabber.h
+    filegrabber.h \
+    kinect2_grabber.h
 
 FORMS    += mainwindow.ui

@@ -1,4 +1,6 @@
 #include "myvtkwidget.h"
+#include "kinect2_grabber.h"
+#include <string.h>
 
 MyVTKWidget::MyVTKWidget(QWidget *parent) : QWidget(parent)
 {
@@ -16,6 +18,7 @@ MyVTKWidget::MyVTKWidget(QWidget *parent) : QWidget(parent)
     //Intialize VTK Widget
     //startButton_ = new QPushButton(this);
     displayWidget_ = new QVTKWidget;
+    vtkObject::GlobalWarningDisplayOff();
 
     //Initialize startButton
     readButton_ = new QPushButton("Read", this);
@@ -30,7 +33,7 @@ MyVTKWidget::MyVTKWidget(QWidget *parent) : QWidget(parent)
     QObject::connect(scanButton, SIGNAL(pressed()), this, SLOT(on_scanButton_pressed()));
 
     //initialize point cloud
-    //cloud.reset(new pcl::PointCloud<PointT>);
+    cloud.reset(new pcl::PointCloud<PointT>);
 
     /*qDebug() << "Calling get count";
     count = fileGrab.getCount();
@@ -41,8 +44,8 @@ MyVTKWidget::MyVTKWidget(QWidget *parent) : QWidget(parent)
         cloudVector.push_back(cloud);
     }*/
 
-    //initialize PCL Viewer
-    m_visualizer = new pcl::visualization::PCLVisualizer ("3D Viewer",false);
+    //initialize PCL m_visualizer
+    m_visualizer.reset(new pcl::visualization::PCLVisualizer ("3D m_visualizer", false));
     m_visualizer->setBackgroundColor(0.1,0.1,0.1);
 
     //renderWindow = m_visualizer->getRenderWindow();
@@ -92,6 +95,7 @@ QWidget* MyVTKWidget::getCentralWidget()
 void MyVTKWidget::on_readButton_pressed()
 {
     //Read and display the point cloud
+    qDebug() << "read pressed";
 
     fileGrab.initializeFileList();
     pcdNames = fileGrab.getNames();
@@ -101,6 +105,7 @@ void MyVTKWidget::on_readButton_pressed()
     while(it != pcdNames.end())
     {
         cloudList->addItem(*it);
+        //qDebug () << *it <<" ";
         it++;
     }
 
@@ -122,16 +127,10 @@ void MyVTKWidget::on_readButton_pressed()
 
 void MyVTKWidget::on_cloudListItem_clicked(QListWidgetItem *item)
 {
-    //qDebug() << "Putain";
-    //qDebug() << count;
-
     for(int i = 1; i <= cloudVector.size(); i++)
     {
-        //qDebug() << "Jagjit Singh";
-
         if(cloudList->item(i) == item)
         {
-            //qDebug() << "more putain";
             m_visualizer->removePointCloud("ccc");
             m_visualizer->addPointCloud(cloudVector[i-1], "ccc");
             //m_visualizer->spinOnce();
@@ -143,5 +142,74 @@ void MyVTKWidget::on_cloudListItem_clicked(QListWidgetItem *item)
 
 void MyVTKWidget::on_scanButton_pressed()
 {
+    qDebug () << "hello";
+    unsigned int fileSaved =0;
+    pcl::PointCloud<PointT>::ConstPtr cloud;
+    // Retrieved Point Cloud Callback Function
+    boost::mutex mutex;
+    boost::function<void( const pcl::PointCloud<PointT>::ConstPtr& )> pointcloud_function =
+            [&cloud, &mutex]( const pcl::PointCloud<PointT>::ConstPtr& ptr ){
+        boost::mutex::scoped_lock lock( mutex );
+        cloud = ptr;
+    };
 
+    // Kinect2Grabber
+    boost::shared_ptr<pcl::Grabber> grabber = boost::make_shared<pcl::Kinect2Grabber>();
+
+    // Register Callback Function
+    boost::signals2::connection connection = grabber->registerCallback( pointcloud_function );
+
+    // Keyboard Callback Function and saving PCD file - (NEW function added)
+    //int fileSaved = 0;
+    boost::function<void( const pcl::visualization::KeyboardEvent& )> keyboard_function =
+            [&cloud, &mutex, &fileSaved]( const pcl::visualization::KeyboardEvent& event ){
+        // Save Point Cloud to PCD File when Pressed Space Key
+        if( event.getKeyCode() == VK_SPACE && event.keyDown() ){
+            boost::mutex::scoped_try_lock lock( mutex );
+            if(lock.owns_lock()){
+                //pcl::io::savePCDFile("cloud1", *cloud, false);
+                stringstream stream;
+                stream << "InputCloud" << fileSaved << ".pcd";
+                string filename = stream.str();
+                if(pcl::io::savePCDFile(filename, *cloud, false )==0)
+                {
+                    fileSaved++;
+                    cout << "Saved" << filename << "." << endl;
+                }
+                else PCL_ERROR("Problem saving %s.\n",filename.c_str());
+            }
+        }
+    };
+
+    // Register Callback Function
+    m_visualizer->registerKeyboardCallback( keyboard_function );
+
+    // Start Grabber
+    grabber->start();
+
+    qDebug () << "started";
+
+    for(int i=0; i <= 10000; i++){
+        // Update m_visualizer
+        //m_visualizer->spinOnce();
+
+        qDebug () << "boom";
+
+        boost::mutex::scoped_try_lock lock( mutex );
+        if( cloud && lock.owns_lock() ){
+            if( cloud->size() != 0 ){
+                /* Processing Point Cloud */
+
+                // Update Point Cloud
+                if( !m_visualizer->updatePointCloud( cloud, "cloud" ) ){
+                    m_visualizer->addPointCloud( cloud, "cloud" );
+                    m_visualizer->resetCameraViewpoint( "cloud" );
+                    displayWidget_->update();
+                }
+            }
+        }
+    }
+
+    // Stop Grabber
+    grabber->stop();
 }

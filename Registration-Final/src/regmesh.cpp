@@ -73,8 +73,8 @@ PointCloud::Ptr regmesh::Register(std::vector<PointCloud::Ptr> &Data ) {
 
 
     float MaxDistance1 = 0.05, RansacVar1= 0.01; int Iterations1= 80;
-    float MaxDistance2 = 0.015, RansacVar2= 0.01; int Iterations2 = 80;
-    float VoxelGridLeafSize = 0.06; // 0.004
+    float MaxDistance2 = 0.015, RansacVar2= 0.01; int Iterations2 = 100;
+    float VoxelGridLeafSize = 0.004; // 0.004
     float OutlierRemovalThreshold = 5.0;
 
     cfilter FilterObj;
@@ -88,20 +88,23 @@ PointCloud::Ptr regmesh::Register(std::vector<PointCloud::Ptr> &Data ) {
         cloud_src = result2; // source
         cloud_tgt = Data[i]; // target
 
-        src = FilterObj.VoxelGridDownSample(cloud_src, VoxelGridLeafSize);
-        tgt = FilterObj.VoxelGridDownSample(cloud_tgt, VoxelGridLeafSize);
+        //src = FilterObj.VoxelGridDownSample(cloud_src, VoxelGridLeafSize);
+        //tgt = FilterObj.VoxelGridDownSample(cloud_tgt, VoxelGridLeafSize);
 
-        result1 = ICP3(src, tgt, MaxDistance1, RansacVar1, Iterations1, MaxDistance2, RansacVar2, Iterations2);
+        //result1 = ICP2(src, tgt, MaxDistance1, RansacVar1, Iterations1, MaxDistance2, RansacVar2, Iterations2);
+        result1 = ICP(cloud_src, cloud_tgt, MaxDistance2, RansacVar2, Iterations2);
+        *result1 += *cloud_tgt;
+
         result2 = FilterObj.OutlierRemoval(result1, OutlierRemovalThreshold);
 
         std::cout << std::endl;
     }
 
-    result3 = FilterObj.OutlierRemoval(result2, 4.0);
-    result4 = FilterObj.OutlierRemoval(result3, 4.0);
-    result5 = FilterObj.Smoothing(result4, 0.03);
+    //result3 = FilterObj.OutlierRemoval(result2, 4.0);
+    //result4 = FilterObj.OutlierRemoval(result3, 4.0);
+    //result5 = FilterObj.Smoothing(result4, 0.03);
 
-    return result5;
+    return result2;
 
 }
 

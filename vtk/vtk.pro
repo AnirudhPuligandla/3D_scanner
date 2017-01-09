@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,7 +17,9 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     myvtkwidget.cpp \
     filegrabber.cpp \
-    kinect2_grabber.cpp
+    kinect2_grabber.cpp \
+    cfilter.cpp \
+    regmesh.cpp
 
 # PCL
 INCLUDEPATH += "C:\Program Files\PCL 1.8.0\include\pcl-1.8"
@@ -213,6 +216,20 @@ HEADERS  += mainwindow.h \
     myvtkwidget.h \
     screensetup.h \
     filegrabber.h \
-    kinect2_grabber.h
+    kinect2_grabber.h \
+    cfilter.h \
+    regmesh.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    Images/back.jpg \
+    Images/button.jpg \
+    Images/done.jpg \
+    Images/kinect.jpg \
+    Images/read.jpg \
+    Images/readButton.jpg \
+    Images/register.jpg \
+    Images/save.jpg \
+    Images/start.jpg \
+    Images/stop.jpg

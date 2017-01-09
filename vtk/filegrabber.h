@@ -11,17 +11,25 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/io/io.h>
+#include "cfilter.h"
+#include <QFileDialog>
+#include <algorithm>
+#include <QStringList>
+#include <boost/filesystem.hpp>
+#include <filesystem>
+#include <boost/filesystem/path.hpp>
+#include <cstring>
 
 using namespace std;
 
 //typedef pcl::PointXYZRGBA PointT;
- typedef pcl::PointXYZRGBA PointT;
+//typedef pcl::PointXYZRGBA PointT;
 
 class FileGrabber
 {
 public:
     //Function to initialize the list of PCD files
-    void initializeFileList();
+    void initializeFileList(int originalSize, int filteredSize);
 
     //Function to return the vector containing pcd paths
     vector<string> getPaths();

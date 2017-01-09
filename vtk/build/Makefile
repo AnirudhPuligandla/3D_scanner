@@ -230,6 +230,7 @@ Makefile: ..\vtk.pro C:\Qt\Qt5.7.0\5.7\msvc2015_64\mkspecs\win32-msvc2015\qmake.
 		C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\qtmain.prl \
 		C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5Widgets.prl \
 		C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5Gui.prl \
+		C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5SerialPort.prl \
 		C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5Core.prl
 	$(QMAKE) -spec win32-msvc2015 -o Makefile ..\vtk.pro
 C:\Qt\Qt5.7.0\5.7\msvc2015_64\mkspecs\features\spec_pre.prf:
@@ -389,6 +390,7 @@ C:\Qt\Qt5.7.0\5.7\msvc2015_64\mkspecs\features\lex.prf:
 C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\qtmain.prl:
 C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5Widgets.prl:
 C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5Gui.prl:
+C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5SerialPort.prl:
 C:\Qt\Qt5.7.0\5.7\msvc2015_64\lib\Qt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec win32-msvc2015 -o Makefile ..\vtk.pro

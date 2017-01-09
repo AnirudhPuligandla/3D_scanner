@@ -311,9 +311,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Kinect2Grabber::convertDepthToPointXYZ( UINT
             CameraSpacePoint cameraSpacePoint = { 0.0f, 0.0f, 0.0f };
             mapper->MapDepthPointToCameraSpace( depthSpacePoint, depth, &cameraSpacePoint );
 
-                point.x = cameraSpacePoint.X;
-                point.y = cameraSpacePoint.Y;
-                point.z = cameraSpacePoint.Z;
+            point.x = cameraSpacePoint.X;
+            point.y = cameraSpacePoint.Y;
+            point.z = cameraSpacePoint.Z;
 
 
             *pt = point;
@@ -393,18 +393,18 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr Kinect2Grabber::convertRGBDepthToPointXYZ
             CameraSpacePoint cameraSpacePoint = { 0.0f, 0.0f, 0.0f };
             mapper->MapDepthPointToCameraSpace( depthSpacePoint, depth, &cameraSpacePoint );
             if( ( 0 <= colorX ) && ( colorX < colorWidth ) && ( 0 <= colorY ) && ( colorY < colorHeight ) ){
-       //      //A LIMIT IN THE DEPTH MUST BE SET WHEN WE KNOW THE OPERATING DISTANCE (Kinect to platform)
+                //      //A LIMIT IN THE DEPTH MUST BE SET WHEN WE KNOW THE OPERATING DISTANCE (Kinect to platform)
                 if (cameraSpacePoint.Z >= 0.2)
                 {
-                   if (cameraSpacePoint.Y <= 1.2 && cameraSpacePoint.Y >= -1.2)
-                   {
-                       if (cameraSpacePoint.X <= 0.6 && cameraSpacePoint.X >= -0.6 ){
-                       point.x = cameraSpacePoint.X;
-                       point.y = cameraSpacePoint.Y;
-                       point.z = cameraSpacePoint.Z;
+                    if (cameraSpacePoint.Y <= 1.2 && cameraSpacePoint.Y >= -1.2)
+                    {
+                        if (cameraSpacePoint.X <= 0.6 && cameraSpacePoint.X >= -0.6 ){
+                            point.x = cameraSpacePoint.X;
+                            point.y = cameraSpacePoint.Y;
+                            point.z = cameraSpacePoint.Z;
 
-                       *pt = point;}
-                   }
+                            *pt = point;}
+                    }
                 }
 
             }

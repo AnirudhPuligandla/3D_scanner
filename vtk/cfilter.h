@@ -34,14 +34,30 @@ public:
 
     cfilter();
     ~cfilter();
-
-    PointCloud::Ptr VoxelGridDownSample(PointCloud::Ptr , float);
-    PointCloud::Ptr OutlierRemoval(PointCloud::Ptr , float);
+	// The PassThrough filter cuts the given point cloud and just keep the points within the given X Y Z dimensions
+    // First argument is a PointCloud pointer to the point cloud to be filtered
+    // the rest of the input arguments are the dimensions in Z dimension (Zmin, and Zmax), in Y dimension (Ymin, Ymax), 
+    // then in X dimension (Xmin, Xmax) >> In our software this arguments are determined by the cube in the GUI
+    // The output of this function is a PointCloud pointer to the filtered point cloud
     PointCloud::Ptr PassThrough(PointCloud::Ptr, float, float, float, float, float, float);
+
+	// The OutlierRemoval is the method for removing the oulier of a given point cloud using PCL StatisticalOutlierRemoval filter
+    // It takes 2 arguments, a pointer to the pointcloud to be filtered, and the standard deviation threshold
+    // The output is a PointCloud pointer to the filtered point cloud
+    PointCloud::Ptr OutlierRemoval(PointCloud::Ptr , float);
+
+    // The VoxelGridDownSample is the method for downsampling a point cloud using the PCL Voxelgrid filter
+    // It takes 2 arguments, a pointer to the pointcloud to be downsampled, and the leaf size defining the dimensions
+    // of the Voxel used in the downsamplind >> Bigger the leaf size, less points you get in output (more downsampling)
+    // The output is a PointCloud pointer to the downsampled point cloud    
+    PointCloud::Ptr VoxelGridDownSample(PointCloud::Ptr , float);
+
+    // The smoothing function smoothes the given point cloud using PCL Moving Least squares smoothing filter
+    // it takes the pointer to the input point cloud, and the smoothing search radius parameter 
+    // Higher the parameter, more smoothe the output will be >> BE CAREFUL as it can remove all the details
     PointCloud::Ptr Smoothing(PointCloud::Ptr, float );
+
     //void Filter (std::vector<PointCloud::Ptr> &, std::vector<PointCloud::Ptr> &, float , float , float , float , float , float );
-
-
 
 
 private:

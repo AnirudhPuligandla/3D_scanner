@@ -4,34 +4,10 @@ cfilter::cfilter() {}
 cfilter::~cfilter() {}
 
 
-PointCloud::Ptr cfilter::VoxelGridDownSample(PointCloud::Ptr cloud, float LeafSize) {
-    // Downsample using voxelgrid
-    PointCloud::Ptr cloud_filtered (new PointCloud);
-    pcl::VoxelGrid<PointT> vox;
-    vox.setInputCloud (cloud);
-    vox.setLeafSize (LeafSize, LeafSize, LeafSize);
-    vox.filter (*cloud_filtered);
-    return cloud_filtered;
-}
-
-PointCloud::Ptr cfilter::OutlierRemoval(PointCloud::Ptr cloud, float Threshold) {
-    //Create the statistical-outlier-removal filtering object
-    PointCloud::Ptr cloud_filtered (new PointCloud);
-    pcl::StatisticalOutlierRemoval<PointT> sor;
-    qDebug()<<"inside outlier";
-    sor.setInputCloud (cloud);
-    sor.setMeanK (50);
-    sor.setStddevMulThresh (Threshold); // Threshold = 5.0
-    sor.filter (*cloud_filtered);
-
-    //pcl::io::savePCDFileASCII ("test_outlier.pcd", *cloud_filtered);
-
-    return cloud_filtered;
-}
-
 PointCloud::Ptr cfilter::PassThrough(PointCloud::Ptr cloud, float z1, float z2 , float y1, float y2, float x1, float x2) {
-
-    PointCloud::Ptr cloud_filteredz (new PointCloud);
+    
+    // Defining local PoinCloud pointer variables to be used internally within the method
+    PointCloud::Ptr cloud_filteredz (new PointCloud); 
     PointCloud::Ptr cloud_filteredy (new PointCloud);
     PointCloud::Ptr cloud_filtered (new PointCloud);
 
@@ -40,31 +16,68 @@ PointCloud::Ptr cfilter::PassThrough(PointCloud::Ptr cloud, float z1, float z2 ,
 
     qDebug()<<"inside pass through";
 
-    pass.setInputCloud (cloud);
-    pass.setFilterFieldName ("z");
-    pass.setFilterLimits (z1,z2); //0.1,2.0
-    //pass.setFilterLimitsNegative (true);
-    pass.filter (*cloud_filteredz);
+    pass.setInputCloud (cloud);  // passing the input cloud pointer
+    pass.setFilterFieldName ("z"); // defining the dimension to be filtered
+    pass.setFilterLimits (z1,z2);  // setting the limits 
+    pass.filter (*cloud_filteredz); // filter and put the output in a point cloud variable
 
     qDebug()<<"z filtered";
 
-    pass.setInputCloud (cloud_filteredz);
-    pass.setFilterFieldName ("y");
-    pass.setFilterLimits (y1,y2); // -0.85,1.2
-    pass.filter (*cloud_filteredy);
+    pass.setInputCloud (cloud_filteredz); // passing the input cloud pointer
+    pass.setFilterFieldName ("y"); // defining the dimension to be filtered
+    pass.setFilterLimits (y1,y2);  // setting the limits
+    pass.filter (*cloud_filteredy); // filter and put the output in a point cloud variable
 
-    pass.setInputCloud (cloud_filteredy);
-    pass.setFilterFieldName ("x");
-    pass.setFilterLimits (x1, x2); // -0.4,0.4
-    pass.filter (*cloud_filtered);
+    pass.setInputCloud (cloud_filteredy); // passing the input cloud pointer
+    pass.setFilterFieldName ("x"); // defining the dimension to be filtered
+    pass.setFilterLimits (x1, x2); // setting the limits
+    pass.filter (*cloud_filtered); // filter and put the output in a point cloud variable
 
+    qDebug()<<"x and y filtered";
 
-    //pcl::io::savePCDFileASCII ("test_filtered.pcd", *cloud_filtered);
-    return cloud_filtered;
+    return cloud_filtered;  // Return Pointer of the filtered point cloud
 }
+
+
+PointCloud::Ptr cfilter::OutlierRemoval(PointCloud::Ptr cloud, float Threshold) {
+    
+    // Defining local PoinCloud pointer variables to be used internally within the method
+    PointCloud::Ptr cloud_filtered (new PointCloud);
+
+    //Create the statistical-outlier-removal filtering object
+    pcl::StatisticalOutlierRemoval<PointT> sor;
+    qDebug()<<"inside outlier";
+
+    sor.setInputCloud (cloud); // passing the input cloud pointer
+    sor.setMeanK (50);         // Setting number of neighbors 
+    sor.setStddevMulThresh (Threshold); // set the standard deviation threshold
+    sor.filter (*cloud_filtered);       // filter and put the output in a point cloud variable
+
+    return cloud_filtered; // Return Pointer of the filtered point cloud
+}
+
+
+PointCloud::Ptr cfilter::VoxelGridDownSample(PointCloud::Ptr cloud, float LeafSize) {
+    
+    // Defining local PoinCloud pointer variables to be used internally within the method
+    PointCloud::Ptr cloud_filtered (new PointCloud);
+    
+    //Create the sVoxelGrid filtering object
+    pcl::VoxelGrid<PointT> vox;
+    vox.setInputCloud (cloud); // passing the input cloud pointer
+    
+    // Dimensions of the Voxels used in the downsamplind >>
+    // Bigger the leaf size, less points you get in output (more downsampling)
+    vox.setLeafSize (LeafSize, LeafSize, LeafSize);
+    vox.filter (*cloud_filtered); // filter and put the output in a point cloud variable
+
+    return cloud_filtered;   // Return Pointer of the filtered point cloud
+}
+
 
 PointCloud::Ptr cfilter::Smoothing(PointCloud::Ptr cloud, float SearchRadius) {
 
+    // Defining local PoinCloud pointer variables to be used internally within the method
     PointCloud::Ptr cloud_smoothed (new PointCloud);
 
     // Start MLS
@@ -76,16 +89,18 @@ PointCloud::Ptr cfilter::Smoothing(PointCloud::Ptr cloud, float SearchRadius) {
     pcl::MovingLeastSquares<PointT, pcl::PointNormal> mls;
 
     mls.setComputeNormals (true);
-    // Set parameters
-    mls.setInputCloud (cloud);
+    // Setting parameters
+    mls.setInputCloud (cloud); // passing the input cloud pointer
     mls.setPolynomialFit (true);
-    mls.setSearchMethod (tree);
-    mls.setSearchRadius (SearchRadius);
+    mls.setSearchMethod (tree);  // KD-Tree search method
+    // Set the sphere radius that is to be used for determining the k-nearest neighbors used for fitting.
+    mls.setSearchRadius (SearchRadius); 
     // Reconstruct
     mls.process (mls_points);
 
-    pcl::copyPointCloud(mls_points, *cloud_smoothed); // convert from normals to XYZ
-    return cloud_smoothed;
+    pcl::copyPointCloud(mls_points, *cloud_smoothed); // To convert from XYZNormals to XYZ
+
+    return cloud_smoothed; // Return Pointer of the smoothed point cloud
 }
 
 /*void cfilter::Filter(std::vector<PointCloud::Ptr> &DataVector, float z1, float z2, float y1, float y2, float x1, float x2)
